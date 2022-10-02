@@ -1,0 +1,19 @@
+server:
+  port: 0
+  servlet:
+    context-path: /service-bus-broker
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+api:
+  title: Message Broker Service Example
+  version: v1
+  description: REST API Services for Message Broker
+spring:
+  application:
+    name: Message Broker Service Example
