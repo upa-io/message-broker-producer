@@ -15,20 +15,30 @@ public class MessageBrokerConfiguration{
   public static final String QUEUE_NAME = "myQueue";
   public static final String EXCHANGE_NAME = "myDirectExchange";
   public static final String ROUTING_KEY = "example";
+
+  public static final String DEAD_LETTER_QUEUE_NAME = "myQueue.dead-letter.queue";
   
   @Bean
   Queue createQueue() {
-      return new Queue("myQueue", true);
+      return QueueBuilder.durable(QUEUE_NAME)
+              .withArgument("x-dead-letter-exchange", "")
+              .withArgument("x-dead-letter-routing-key", DEAD_LETTER_QUEUE_NAME)
+              .build();
   }
+
+    @Bean
+    Queue deadLetterQueue() {
+        return QueueBuilder.durable(DEAD_LETTER_QUEUE_NAME).build();
+    }
   
   @Bean
   DirectExchange exchange() {
-      return new DirectExchange("myDirectExchange");
+      return new DirectExchange(EXCHANGE_NAME);
   }
   
   @Bean
-  Binding binding(final Queue queue, final DirectExchange exchange) {
-      return BindingBuilder.bind(queue).to(exchange).with("example");
+  Binding binding() {
+      return BindingBuilder.bind(createQueue()).to(exchange()).with(ROUTING_KEY);
   }
   
   @Bean
@@ -38,7 +48,7 @@ public class MessageBrokerConfiguration{
   
   @Bean
   public ConnectionFactory connectionFactory() {
-      return (ConnectionFactory)new CachingConnectionFactory();
+      return new CachingConnectionFactory();
   }
   
   @Bean
@@ -51,6 +61,6 @@ public class MessageBrokerConfiguration{
   
   @Bean
   public AmqpAdmin amqpAdmin() {
-      return (AmqpAdmin)new RabbitAdmin(this.connectionFactory());
+      return new RabbitAdmin(connectionFactory());
   }
 }

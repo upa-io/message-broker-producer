@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8081
   servlet:
     context-path: /service-bus-broker
 management:
@@ -17,3 +17,9 @@ api:
 spring:
   application:
     name: Message Broker Service Example
+  rabbitmq:
+    host: 192.168.1.173
+    username: guest
+    password: guest
+    port: 5672
+
