@@ -25,7 +25,8 @@ public class MessageBrokerProducerController {
 
   @PostMapping("/produce")
   public ResponseEntity<String> produce(@RequestBody ObjectMessageDTO objectMessageDTO) {
-    log.info("Ejecutando controlador: MessageBroker con el metodo: produce");
+    log.info("Ejecutando controlador: MessageBrokerProducerController con el metodo: produce");
+    log.trace("Ejecutando controlador: MessageBrokerProducerController con el metodo: produce, con la siguiente peticion {}", objectMessageDTO);
     return producer.produce(objectMessageDTO);
   }
 }

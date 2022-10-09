@@ -1,33 +1,54 @@
 Configuration:
   status: debug
-
+  Properties:
+    property:
+      - name: log-path
+        value: /var/log
   appenders:
     Console:
       name: LogToConsole
       PatternLayout:
-        Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
-
+        Pattern: "%sn %d{yyyy/MM/dd HH:mm:ss,SSS} %r [%-6p] [%t] %c{3} %C{3}.%M(%F:%L) - %m%n"
     RollingFile:
       - name: LogToRollingFile
-        fileName: message-broker-consumer.log
-        filePattern: "$${date:yyyy-MM}/message-broker-consumer-%d{MM-dd-yyyy}-%i.log.gz"
+        fileName: ${log-path}/producer-broker-rest-api.log
+        filePattern: "${log-path}/producer-broker-rest-api_%d{yyyy-MM-dd}.log"
         PatternLayout:
-          pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+          pattern: "%sn %d{yyyy/MM/dd HH:mm:ss,SSS} %r [%-6p] [%t] %c{3} %C{3}.%M(%F:%L) - %m%n"
         Policies:
+          TimeBasedTriggeringPolicy:
+            interval: 1
+            modulate: true
           SizeBasedTriggeringPolicy:
             size: 10MB
         DefaultRollOverStrategy:
           max: 10
-
   Loggers:
     logger:
-      - name: com.upaio.messagebroker.chassis.consumer
+      - name: com.upaio.messagebroker.chassis.producer
         level: info
         additivity: false
         AppenderRef:
           - ref: LogToConsole
           - ref: LogToRollingFile
-
+      - name: com.upaio.messagebroker.chassis.producer.controller
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: LogToConsole
+          - ref: LogToRollingFile
+      - name: org.springframework.boot
+        level: info
+        additivity: false
+        AppenderRef:
+          - ref: LogToConsole
+          - ref: LogToRollingFile
+          - name: org.springframework.boot
+            level: debug
+            additivity: false
+            AppenderRef:
+              - ref: LogToConsole
+              - ref: LogToRollingFile
     Root:
       level: error
       AppenderRef:
