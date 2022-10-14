@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8002
   servlet:
     context-path: /service-bus-broker
 management:
@@ -17,6 +17,10 @@ api:
 spring:
   application:
     name: Message Broker Service Chassis Producer
+  boot:
+   admin:
+    client:
+     url: http://localhost:8001/rest-api-admin-server
   rabbitmq:
     host: localhost
     username: guest
@@ -26,3 +30,6 @@ opentracing:
   jaeger:
     http-sender:
       url: http://localhost:14268/api/traces
+  spring:
+    web:
+      ignoreAutoConfiguredSkipPatterns: true
